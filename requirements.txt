@@ -1,0 +1,17 @@
+Flask-Cors
+Flask-JWT-Extended
+Flask-Migrate
+Flask-Moment
+Flask-RESTful
+Flask-Script
+Flask-SQLAlchemy
+Flask-WTF
+itsdangerous
+passlib
+SQLAlchemy
+Jinja2
+flask
+urllib3
+requests
+pyopenssl
+pyodbc
