@@ -92,26 +92,87 @@ class UserLogin(Resource):
                        'Message': str(e)
                    }, 500
 
-class AllUsers(Resource):
+
+class UserUpdate(Resource):
     @jwt_required()
-    def get(self):
-        return jsonify(UserModel.return_all()), 200
-    # @jwt_required
-    # def get(self):
-    #     return jsonify({
-    #         'user_id': '1',
-    #         'username': 'Chirag DK',
-    #         'email_id': 'placeholder@email.com',
-    #         'role': 'Auditor',
-    #         'status': 'active',
-    #         'access_token': 'access_token',
-    #         'refresh_token': 'refresh_token',
-    #         'message': 'Logged in as'
-    #     }), 200
+    def put(self):
 
+        Name = request.form.get('Name')
+        RoleName = request.form.get('RoleName')
+        EmailID = request.form.get('EmailID')
+        PhoneNumber = request.form.get('PhoneNumber')
+        Status = request.form.get('Status')
+        Password = request.form.get('Password')
+
+        data = {
+            'Name': str(Name),
+            'RoleName': str(RoleName),
+            'EmailID': str(EmailID),
+            'PhoneNumber': str(PhoneNumber),
+            'Status': str(Status),
+            'Password': str(Password)
+        }
+
+        current_user = UserModel.find_by_username(data['EmailID'])
+
+        if not current_user:
+            return {
+                       'Data': "null",
+                       'Message': 'User {} doesn\'t exist'.format(data['EmailID'])
+                   }, 401
+
+
+
+        Name=data['Name'] if data['Name'] != 'None' else current_user.Name
+        RoleName=data['RoleName'] if data['RoleName'] != 'None' else current_user.RoleName
+        EmailID=data['EmailID'] if data['EmailID'] != 'None' else current_user.EmailID
+        PhoneNumber=data['PhoneNumber'] if data['PhoneNumber'] != 'None' else current_user.PhoneNumber
+        Status=data['Status'] if data['Status'] != 'None' else current_user.Status
+        Password = data['Password'] if data['Password'] != 'None' else current_user.Password
+
+        try:
+            UserModel.update_to_db(Name=Name, RoleName=RoleName, EmailID=EmailID, PhoneNumber=PhoneNumber, Status=Status, Password=Password)
+            return {
+                       'Data': "null",
+                       'Message': "User details updated successfully"
+                   }, 201
+        except Exception as e:
+            return {
+                       'Data': "null",
+                       'Message': str(e)
+                   }, 500
+
+
+
+class UserDelete(Resource):
+    @jwt_required()
     def delete(self):
-        return UserModel.delete_all()
+        EmailID = request.form.get('EmailID')
 
+        data = {
+            'EmailID': str(EmailID),
+        }
+
+        current_user = UserModel.find_by_username(data['EmailID'])
+
+        if not current_user:
+            return {
+                       'Data': "null",
+                       'Message': 'User {} doesn\'t exist'.format(data['EmailID'])
+                   }, 401
+
+        try:
+            UserModel.delete_by_emailID(data['EmailID'])
+            return {
+                       'Data': "null",
+                       'Message': '{} deleted'.format(EmailID)
+                   }, 200
+
+        except Exception as e:
+                return {
+                           'Data': "null",
+                           'Message': str(e)
+                       }, 500
 
 class FeedList(Resource):
     @jwt_required()

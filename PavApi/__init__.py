@@ -25,6 +25,7 @@ import PavApi.Views.views, PavApi.Models.models, PavApi.Resources.resources
 
 api.add_resource(PavApi.Resources.resources.UserRegistration, '/registration')
 api.add_resource(PavApi.Resources.resources.UserLogin, '/login')
-api.add_resource(PavApi.Resources.resources.AllUsers, '/users')
+api.add_resource(PavApi.Resources.resources.UserUpdate, '/userupdate')
+api.add_resource(PavApi.Resources.resources.UserDelete, '/userdelete')
 api.add_resource(PavApi.Resources.resources.FeedList, '/feedlist')
 api.add_resource(PavApi.Resources.resources.FeedDetails, '/feeddetails')

@@ -17,23 +17,29 @@ class UserModel(db.Model):
         db.session.commit()
 
     @classmethod
+    def update_to_db(cls, Name, RoleName, EmailID, PhoneNumber, Status, Password):
+
+        cls.query.filter_by(EmailID = EmailID).update({
+            cls.Name : Name,
+            cls.RoleName : RoleName,
+            cls.EmailID : EmailID,
+            cls.PhoneNumber : PhoneNumber,
+            cls.Status : Status,
+            cls.Password : Password,
+        },
+        synchronize_session = False)
+        db.session.commit()
+
+    @classmethod
     def find_by_username(cls, EmailID):
         return cls.query.filter_by(EmailID = EmailID).first()
 
     @classmethod
-    def delete_all(cls):
-        try:
-            num_rows_deleted = db.session.query(cls).delete()
-            db.session.commit()
-            return {
-                'Data': "null",
-                'Message': '{} row(s) deleted'.format(num_rows_deleted)
-            }
-        except:
-            return {
-                'Data': "null",
-                'Message': 'Something went wrong'
-            }
+    def delete_by_emailID(cls, EmailID):
+
+        cls.query.filter_by(EmailID = EmailID).delete()
+        db.session.commit()
+
 
     @staticmethod
     def generate_hash(Password):
