@@ -21,19 +21,6 @@ class UserModel(db.Model):
         return cls.query.filter_by(EmailID = EmailID).first()
 
     @classmethod
-    def return_all(cls):
-        def to_json(x):
-            return {
-            'Name': x.Name,
-            'RoleName': x.RoleName,
-            'EmailID': x.EmailID,
-            'PhoneNumber': x.PhoneNumber,
-            'Status': x.Status,
-            'Password': x.Password
-            }
-        return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
-
-    @classmethod
     def delete_all(cls):
         try:
             num_rows_deleted = db.session.query(cls).delete()
@@ -55,3 +42,51 @@ class UserModel(db.Model):
     @staticmethod
     def verify_hash(Password, hash):
         return sha256.verify(Password, hash)
+
+class FeedModel(db.Model):
+    __tablename__ = 'Feed'
+
+    FeedID = db.Column(db.Integer, primary_key=True)
+    AccessRole = db.Column(db.String, nullable = True)
+    Title = db.Column(db.String(200), unique=True, nullable=False)
+    Preview = db.Column(db.String(), nullable = False)
+    Body = db.Column(db.String(), nullable=False)
+    Link = db.Column(db.String(), nullable=False)
+    Image = db.Column(db.String(), nullable=False)
+    Severity = db.Column(db.String(), nullable=False)
+    Industry = db.Column(db.String(), nullable=False)
+    Time = db.Column(db.String(), nullable=False)
+    Region = db.Column(db.String(), nullable=False)
+    Category = db.Column(db.String(), nullable=False)
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def find_by_feedId(cls, FeedID):
+        return cls.query.filter_by(FeedID = FeedID).first()
+
+    @classmethod
+    def find_by_feedTitle(cls, Title):
+        return cls.query.filter_by(Title=Title).first()
+
+    @classmethod
+    def return_all(cls):
+        def to_json(x):
+            return {
+            'FeedID' : x.FeedID,
+            'AccessRole': x.AccessRole,
+            'Title': x.Title,
+            'Preview': x.Preview,
+            'Body': x.Body,
+            'Link': x.Link,
+            'Image': x.Image,
+            'Severity': x.Severity,
+            'Industry': x.Industry,
+            'Time': x.Time,
+            'Region': x.Region,
+            'Category': x.Category
+            }
+        return {'Data': list(map(lambda x: to_json(x), FeedModel.query.all())),
+                'Message': "Feed list fetched"}

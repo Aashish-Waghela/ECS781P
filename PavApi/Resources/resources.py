@@ -1,6 +1,6 @@
 import datetime
 from flask import jsonify, request
-from PavApi.Models.models import UserModel
+from PavApi.Models.models import UserModel, FeedModel
 from flask_restful import Resource, reqparse
 from PavApi import app
 from flask_jwt_extended import (create_access_token, jwt_required)
@@ -113,142 +113,111 @@ class AllUsers(Resource):
     def delete(self):
         return UserModel.delete_all()
 
-class Task(Resource):
-    @jwt_required()
-    def get(self):
-
-        duration = request.args.get('duration')
-
-        data = {
-            'duration':str(duration)
-        }
-        if data['duration'] == "today":
-            return {
-                "today": [
-                    {
-                        "clientid": "cm98",
-                        "client-name": "maruthi",
-                        "assignmentid": "as234",
-                        "assignment-name": "bimal-audit",
-                        "taskgroup-id": "tg765",
-                        "taskgroup-name": "anshul's team",
-                        "taskid": "t345",
-                        "taskname": "bimal-showroom-audit",
-                        "taskdate": "28-4-2020",
-                        "taskstatus": "Not Started",
-                        "taskdescription": "Short description for quick update. Description can be expanded and card when clicked, opens a detailed view of the task",
-                        "taskdetails": "Scan this car and check for Vin related documents"
-                    },
-                    {
-                        "clientid": "cm99",
-                        "client-name": "hyundai",
-                        "assignmentid": "as334",
-                        "assignment-name": "nexa-audit",
-                        "taskgroup-id": "tg865",
-                        "taskgroup-name": "mainak's team",
-                        "taskid": "t355",
-                        "taskname": "nexa-showroom-audit",
-                        "taskdate": "28-4-2020",
-                        "taskstatus": "In-Progress",
-                        "taskdescription": "Short description for quick update. Description can be expanded and card when clicked, opens a detailed view of the task",
-                        "taskdetails": "Scan this car and comment on condition of car"
-                    }
-                ]
-            }
-        elif data['duration'] == "week":
-            return {
-                "week": {
-                    "7-5-2020": [
-                        {
-                            "taskid": "t345",
-                            "taskname": "bimal-showroom-audit",
-                            "taskdate": "28-4-2020",
-                            "taskstatus": "Not Started",
-                            "taskdescription": "Short description for quick update. Description can be expanded and card when clicked, opens a detailed view of the task"
-                        },
-                        {
-                            "taskid": "t355",
-                            "taskname": "nexa-showroom-audit",
-                            "taskdate": "28-4-2020",
-                            "taskstatus": "Started",
-                            "taskdescription": "Short description for quick update. Description can be expanded and card when clicked, opens a detailed view of the task. To Test if the expandable view is working."
-                        },
-                        {
-                            "taskid": "t345",
-                            "taskname": "bimal-showroom-audit",
-                            "taskdate": "28-4-2020",
-                            "taskstatus": "In Progress",
-                            "taskdescription": "Short description for quick update. Description can be expanded and card when clicked, opens a detailed view of the task"
-                        },
-                        {
-                            "taskid": "t355",
-                            "taskname": "nexa-showroom-audit",
-                            "taskdate": "28-4-2020",
-                            "taskstatus": "Completed",
-                            "taskdescription": "Short description for quick update. Description can be expanded and card when clicked, opens a detailed view of the task"
-                        },
-                        {
-                            "taskid": "t355",
-                            "taskname": "nexa-showroom-audit",
-                            "taskdate": "28-4-2020",
-                            "taskstatus": "Delayed",
-                            "taskdescription": "Short description for quick update. Description can be expanded and card when clicked, opens a detailed view of the task. To Test if the expandable view is working."
-                        }
-                    ],
-                    "6-5-2020": [
-                        {
-                            "taskid": "t345",
-                            "taskname": "bimal-showroom-audit",
-                            "taskdate": "28-4-2020",
-                            "taskstatus": "Not Started",
-                            "taskdescription": "Short description for quick update. Description can be expanded and card when clicked, opens a detailed view of the task"
-                        }
-                    ]
-                }
-            }
-
 
 class FeedList(Resource):
+    @jwt_required()
     def get(self):
-        return {
-            "Feed": [
-                {
-                    "id": "1",
-                    "title": "Mask Up, Bangaluru",
-                    "preview": "However, anybody who's been around town in the past few days would have noticed the casula attitude of most people...",
-                    "link": "https://www.deccanherald.com/national/coronavirus-in-india-news-live-updates-total-cases-deaths-flights-trains-today-schedule-mumbai-delhi-kolkata-bengaluru-maharashtra-gujarat-west-bengal-tamil-nadu-covid-19-tracker-today-worldometer-update-lockdown-4-latest-news-838583.html",
-                    "image": "https://inratiastorage.blob.core.windows.net/images/image(15).jpg",
-                    "time": "7 hours ago",
-                    "severity": "High",
-                    "industry": "Energy"
-                },
-                {
-                    "id": "2",
-                    "title": "Start Flight Operation in Kolkata from May 30: Mamata Banerjee urges Centre",
-                    "preview": "West Bengal Chief Minister Mamata Banerjee on Satirday appealed the Central Governemnt to defer flight operations ...",
-                    "link": "https://www.deccanherald.com/business/business-news/stuff-ceo-buys-nz-media-company-from-australias-nine-for-61-cents-841575.html?utm_campaign=fullarticle&utm_medium=referral&utm_source=inshorts",
-                    "image": "https://inratiastorage.blob.core.windows.net/images/image(6).jpg",
-                    "time": "3 days ago",
-                    "severity": "Low",
-                    "industry": "Energy"
-                },
-                {
-                    "id": "3",
-                    "title": "Start Flight Operation in Kolkata from May 30: Mamata Banerjee urges Centre",
-                    "preview": "West Bengal Chief Minister Mamata Banerjee on Satirday appealed the Central Governemnt to defer flight operations ...",
-                    "link": "https://zeenews.india.com/india/imd-predicts-heatwave-issued-red-alert-for-north-india-rains-likely-after-may-28-2285848.html?utm_campaign=fullarticle&utm_medium=referral&utm_source=inshorts",
-                    "image": "https://inratiastorage.blob.core.windows.net/images/image(4).jpg",
-                    "time": "23 days ago",
-                    "severity": "Low",
-                    "industry": "Energy"
-                }
-            ]
+        return FeedModel.return_all(), 200
+
+    @jwt_required()
+    def post(self):
+        AccessRole = request.form.get('AccessRole')
+        Title = request.form.get('Title')
+        Preview = request.form.get('Preview')
+        Body = request.form.get('Body')
+        Link = request.form.get('Link')
+        Image = request.form.get('Image')
+        Severity = request.form.get('Severity')
+        Industry = request.form.get('Industry')
+        Time = request.form.get('Time')
+        Region = request.form.get('Region')
+        Category = request.form.get('Category')
+
+        data = {
+            'AccessRole': str(AccessRole),
+            'Title': str(Title),
+            'Preview': str(Preview),
+            'Body': str(Body),
+            'Link': str(Link),
+            'Image': str(Image),
+            'Severity': str(Severity),
+            'Industry': str(Industry),
+            'Time': str(Time),
+            'Region': str(Region),
+            'Category': str(Category),
+            '': str()
         }
+
+        if FeedModel.find_by_feedTitle(data['Title']):
+            return {
+                       'Data': "null",
+                       'Message': "Feed already exists"
+                   }, 409
+
+        new_feed = FeedModel(
+            AccessRole=data['AccessRole'],
+            Title=data['Title'],
+            Preview=data['Preview'],
+            Body=data['Body'],
+            Link=data['Link'],
+            Image=data['Image'],
+            Severity=data['Severity'],
+            Industry=data['Industry'],
+            Time=data['Time'],
+            Region=data['Region'],
+            Category=data['Category']
+        )
+
+        try:
+            new_feed.save_to_db()
+            return {
+                       'Data': "null",
+                       'Message': "Feed created successfully"
+                   }, 201
+        except Exception as e:
+            return {
+                       'Data': "null",
+                       'Message': str(e)
+                   }, 500
 
 
 class FeedDetails(Resource):
     def get(self):
-        return {
-            "id": "12345",
-            "body": "First 100 characters of the body"
+        FeedID = request.args.get('FeedID')
+
+        data = {
+            'FeedID': int(FeedID)
         }
+
+        try:
+            current_feed = FeedModel.find_by_feedId(data['FeedID'])
+
+            if not current_feed:
+                return {
+                           'Data': "null",
+                           'Message': 'Feed {} doesn\'t exist'.format(data['FeedID'])
+                       }, 409
+        except Exception as e:
+            return {
+                       'Data': "null",
+                       'Message': str(e)
+                   }, 500
+
+        return {
+            "Data" : {
+                'FeedID': current_feed.FeedID,
+                'AccessRole': current_feed.AccessRole,
+                'Title': current_feed.Title,
+                'Preview': current_feed.Preview,
+                'Body': current_feed.Body,
+                'Link': current_feed.Link,
+                'Image': current_feed.Image,
+                'Severity': current_feed.Severity,
+                'Industry': current_feed.Industry,
+                'Time': current_feed.Time,
+                'Region': current_feed.Region,
+                'Category': current_feed.Category
+            },
+            "Message" : "Feed details fetched"
+        }, 200
+
