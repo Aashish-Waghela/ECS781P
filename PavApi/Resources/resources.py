@@ -110,7 +110,7 @@ class UserUpdate(Resource):
             'EmailID': str(EmailID),
             'PhoneNumber': str(PhoneNumber),
             'Status': str(Status),
-            'Password': str(Password)
+            'Password': str(UserModel.generate_hash(Password))
         }
 
         current_user = UserModel.find_by_username(data['EmailID'])
