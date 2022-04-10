@@ -79,7 +79,6 @@ class UserLogin(Resource):
                            'EmailID': current_user.EmailID,
                            'PhoneNumber': current_user.PhoneNumber,
                            'Status': current_user.Status,
-                           'Password': current_user.Password,
                            'access_token': access_token
                        }, 200
             else:
