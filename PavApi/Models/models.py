@@ -74,8 +74,31 @@ class FeedModel(db.Model):
         return cls.query.filter_by(FeedID = FeedID).first()
 
     @classmethod
-    def find_by_feedTitle(cls, Title):
-        return cls.query.filter_by(Title=Title).first()
+    def find_by_Title(cls, Title):
+        return cls.query.filter_by(Title=Title)
+
+
+    @classmethod
+    def find_by_RoleName(cls, RoleName):
+        def to_json_role(x):
+            return {
+                'FeedID': x.FeedID,
+                'AccessRole': x.AccessRole,
+                'Title': x.Title,
+                'Preview': x.Preview,
+                'Body': x.Body,
+                'Link': x.Link,
+                'Image': x.Image,
+                'Severity': x.Severity,
+                'Industry': x.Industry,
+                'Time': x.Time,
+                'Region': x.Region,
+                'Category': x.Category
+            }
+        return {'Data': list(map(lambda x: to_json_role(x), FeedModel.query.filter_by(AccessRole=RoleName))),
+                'Message': "Feed list fetched"}
+
+
 
     @classmethod
     def return_all(cls):

@@ -177,7 +177,25 @@ class UserDelete(Resource):
 class FeedList(Resource):
     @jwt_required()
     def get(self):
-        return FeedModel.return_all(), 200
+
+        RoleName = str(request.args.get('RoleName'))
+        print(RoleName)
+        try:
+            if RoleName == "None":
+                return {
+                           'Data': "null",
+                           'Message': "Data can't be accessed without specifying role name"
+                       }, 200
+            elif RoleName == "CEO":
+                return FeedModel.find_by_RoleName("CEO")
+            elif RoleName == "CIO":
+                return FeedModel.find_by_RoleName("CIO")
+        except Exception as e:
+            return {
+                       'Data': "null",
+                       'Message': str(e)
+                   }, 500
+
 
     @jwt_required()
     def post(self):
@@ -208,7 +226,7 @@ class FeedList(Resource):
             '': str()
         }
 
-        if FeedModel.find_by_feedTitle(data['Title']):
+        if FeedModel.find_by_Title(data['Title']):
             return {
                        'Data': "null",
                        'Message': "Feed already exists"
